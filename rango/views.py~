@@ -2,7 +2,8 @@ from django.shortcuts import render
 
 def index(request):
     context_dict = {'boldmessage': "I am bold font from the context"}
-    return render(request, 'index.html', context_dict)
+    return render(request, 'rango/index.html', context_dict)
 
 def about(request):
-    return render(request, 'about.html')
+    context_dict = {'This is the about page!'}
+    return render(request, 'rango/about.html',context_dict)

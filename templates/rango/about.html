@@ -1,10 +1,13 @@
 <!DOCTYPE html>
+{% load staticfiles %}
+
 <html>
   <head>
     <title>About</title>
   </head>
   <body>
     <h1>Rango says here is the about page</h1>
+    <img src="{% static "images/smoking.jpg" %}"/>
     <a href="javascript:history.back()">back to home page</a>
   </body>
 </html>
