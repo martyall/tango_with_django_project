@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 
+{% load staticfiles %} <!-- new line -->
+
 <html>
   <head>
     <title>Rango</title>
   </head>
+
   <body>
     <h1>Rango says...</h1>
     hello world! <strong>{{boldmessage}}</strong><br />
+    
+    {% if categories %}
+      <ul>
+	{% for category in categories %}
+	<li>{{category.name}}</li>
+	{% end for %}
+      </ul>
+    {% else %}
+      <strong>There are no categories present</strong>
+    {% end if %}
     <a href="/rango/about/">Go to about page</a><br />
+    <img src="{% static "images/8035.jpg" %}" alt="Picture of Men" /> <!--new line -->
   </body>
 </html>
