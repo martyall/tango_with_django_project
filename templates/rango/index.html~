@@ -9,8 +9,11 @@
 
   <body>
     <h1>Rango says...</h1>
-    hello world! <strong>{{boldmessage}}</strong><br />
-    
+      {% if user.is_authenticated %}
+        <h1>Hey there, {{ user.username }}!</h1>
+      {% else %}
+        hello world! <strong>{{boldmessage}}</strong><br />
+      {% endif %}
     {% if categories %}
       <h1>Top 5 Categories</h1>
       <ul>
@@ -35,5 +38,12 @@
 
     <a href="/rango/about/">Go to about page</a><br />
     <img src="{% static "images/8035.jpg" %}" alt="Picture of Men" /> <!--new line -->
+    <a href="/rango/add_category/">Add a new category</a><br />
+    {% if user.is_authenticated %}
+    <a href="/rango/restricted/">Restricted Page</a><br />
+    <a href="/rango/logout/">Logout</a><br />
+    {% else %}
+    <a href="/rango/register/"> Register Here!</a>
+    <a href="/rango/login/">Login</a>
   </body>
 </html>

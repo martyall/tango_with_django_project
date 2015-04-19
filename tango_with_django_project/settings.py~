@@ -120,5 +120,5 @@ TEMPLATE_DIRS = (
     TEMPLATE_PATH,
 )
 
-print BASE_DIR
-print TEMPLATE_DIRS
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
