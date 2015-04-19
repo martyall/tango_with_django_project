@@ -12,15 +12,30 @@
     hello world! <strong>{{boldmessage}}</strong><br />
     
     {% if categories %}
+      <h1>Top 5 Categories</h1>
       <ul>
 	{% for category in categories %}
-	<li>{{category.name}}</li>
+	<li><a href="/rango/category/{{ category.slug }}">{{category.name}}</a></li>
 	{% endfor %}
       </ul>
     {% else %}
       <strong>There are no categories present</strong>
     {% endif %}
+
+    {% if categories_views %}
+      <h1>Top 5 categories by views</h1>
+      <ul>
+	{% for category in categories_views %}
+	<li><a href="/rango/category/{{ category.slug }}">{{category.name}}</a></li>
+	{% endfor %}
+      </ul>
+    {% else %}
+      <strong>There are no categories present</strong>
+    {% endif %}
+
     <a href="/rango/about/">Go to about page</a><br />
     <img src="{% static "images/8035.jpg" %}" alt="Picture of Men" /> <!--new line -->
+
+    <a href ="/rango/add_category/">Add a new category</a><br />
   </body>
 </html>
