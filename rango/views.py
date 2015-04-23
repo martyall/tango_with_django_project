@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 def index(request):
     category_list = Category.objects.order_by('-likes')[:5]
@@ -47,6 +48,7 @@ def category(request, category_name_slug):
         
     return render(request, 'rango/category.html', context_dict)
 
+@login_required
 def add_category(request):
     # A HTTP POST?
     if request.method == 'POST':
@@ -71,6 +73,7 @@ def add_category(request):
     # Render the form with error messages (if any).
     return render(request, 'rango/add_category.html', {'form': form})
 
+@login_required
 def add_page(request, category_name_slug):
 
     # need some category to exist for this page
@@ -161,10 +164,12 @@ def user_login(request):
                 #an inactive user
                 return HttpResponse("Your Rango account is disabled")
         else:
+            if User.objects.filter(username=username).exists():
+                error_msg = "Invalid password supplied."
             #bad login info was given
-            print "Invalid login details: {0}, {1}".format(username, password)
-            return HttpResponse("Invalid login details supplied.")
-
+            else:
+                error_msg = "Invalid username supplied."
+            return render(request, 'rango/login.html', {'error_msg':error_msg, 'username':username})
     else:
         #else this user hasn't attempted to login yet, i.e. the 
         #request method was a "GET"
