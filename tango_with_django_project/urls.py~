@@ -23,7 +23,9 @@ urlpatterns = patterns('',
     #add this url patter to override the default pattern in accounts
     url(r'^accounts/register/$', MyRegistrationView.as_view(), name='registration_register'),
 
-    (r'^accounts/', include('registration.backends.simple.urls'))
+    (r'^accounts/', include('registration.backends.simple.urls')),
+    (r'^accounts/', include('registration.backends.default.urls')),
+    (r'^search/', include('googlesearch.urls')),
 )
 
 if settings.DEBUG:

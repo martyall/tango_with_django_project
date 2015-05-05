@@ -2,11 +2,15 @@
 
 {% load staticfiles %}
 
-{% block test %}About{% endblock %}
-
+{% block title %}About{% endblock %}
 
 {% block body_block %}
-<h1>Rango says here is the about page</h1>
-<img src="{% static "images/smoking.jpg" %}"/>
+    <div class="page-header">
+                <h1>About</h1>
+            </div>
+            <div>
+            <p>This is Rango's about page!</strong>.</p>
 
+            <img  width="450" height="500" src="{% static "images/smoking.jpg" %}" alt="Picture of Rango" /> <!-- New line -->
+            </div>
 {% endblock %}

@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rango',
     'registration', #add in the registration package
+    'googlesearch',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -119,6 +120,10 @@ TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 
 TEMPLATE_DIRS = (
     TEMPLATE_PATH,
+)
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.request",
 )
 
 MEDIA_URL = '/media/'

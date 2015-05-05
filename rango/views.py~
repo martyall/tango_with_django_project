@@ -1,16 +1,17 @@
 from datetime import datetime
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from rango.models import Category, Page
 
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
 from django.http import HttpResponse, HttpResponseRedirect
-
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
+from rango.bing_search import run_query
 
 
 def index(request):
@@ -55,7 +56,17 @@ def about(request):
 
 def category(request, category_name_slug):
     context_dict = {'category_name_slug':category_name_slug}
+    contect_dict['result_list'] = None
+    context_dict['query'] = None
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
 
+        if query:
+            result_list = run_query(query)
+
+            context_dict['result_list'] = result_list
+            context_dict['query'] = query
+    
     try:
         #can we find a category name slug with the given name?
         #If we can't, the get() method raises a DoesNotExist exception
@@ -67,7 +78,7 @@ def category(request, category_name_slug):
 
         #Get all associated pages
         #note that filter returns >=1 model instances
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
 
         #Adds results list to the template context under name pages.
         context_dict['pages'] = pages
@@ -78,7 +89,10 @@ def category(request, category_name_slug):
     except Category.DoesNotExist:
         #Don't do anything, the template displays the "no category" message
         pass
-        
+
+    if not context_dict['query']:
+        context_dict['query'] = category.name
+    
     return render(request, 'rango/category.html', context_dict)
 
 @login_required
@@ -223,3 +237,35 @@ def user_logout(request):
 def restricted(request):
     return render(request, 'rango/restricted.html', {})
 
+
+'''
+def search(request):
+    
+    result_list = []
+
+    if request.method=='POST':
+        query = request.POST['query'].strip()
+
+        if query:
+            #run bing function to get results
+            result_list = run_query(query)
+        else:
+            result_list = ["No Results"]
+
+    return render(request, 'rango/search.html', {'result_list':result_list})
+'''
+
+def track_url(request):
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+            page = Page.objects.get(id=page_id)
+            page.views += 1
+            page.save()
+            page_url = page.url
+            return redirect(page_url, {'page':page})
+        else:
+            return HttpResponse("page does not exist")
+    else:
+        return render(request, 'rango/')
+    

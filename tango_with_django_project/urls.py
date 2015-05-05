@@ -25,6 +25,7 @@ urlpatterns = patterns('',
 
     (r'^accounts/', include('registration.backends.simple.urls')),
     (r'^accounts/', include('registration.backends.default.urls')),
+    (r'^search/', include('googlesearch.urls')),
 )
 
 if settings.DEBUG:
