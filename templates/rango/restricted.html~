@@ -1,0 +1,7 @@
+{% extends 'rango/base.html' %}
+
+{% block test %}Restricted{% endblock %}
+
+{% block body_block %}
+You can't see this text because you're not logged in
+{% endblock %}
