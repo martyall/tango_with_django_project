@@ -1,15 +1,17 @@
 from datetime import datetime
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 
 from rango.models import Category, Page
 
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
+from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
 
 from rango.bing_search import run_query
 
@@ -92,7 +94,8 @@ def category(request, category_name_slug):
 
     if not context_dict['query']:
         context_dict['query'] = category.name
-    
+    categories = Category.objects.order_by('-likes')[:5]
+    context_dict['categories'] = categories
     return render(request, 'rango/category.html', context_dict)
 
 @login_required
@@ -269,3 +272,76 @@ def track_url(request):
     else:
         return render(request, 'rango/')
     
+from django.contrib.auth.decorators import login_required
+    
+@login_required
+def like_category(request):
+
+    cat_id = None
+    if request.method == 'GET':
+        cat_id = request.GET['category_id']
+
+    likes = 0
+    if cat_id:
+        cat = Category.objects.get(id=int(cat_id))
+        if cat:
+            likes = cat.likes + 1
+            cat.likes =  likes
+            cat.save()
+
+    return HttpResponse(likes)
+
+def get_category_list(max_results=0, starts_with=''):
+    cat_list = []
+    if starts_with:
+        cat_list = Category.objects.filter(name__istartswith=starts_with)
+
+    if max_results > 0:
+        if len(cat_list) > max_results:
+            cat_list = cat_list[:max_results]
+
+    return cat_list
+
+def suggest_category(request):
+
+    cat_list = []
+    starts_with = ''
+    if request.method == "GET":
+        starts_with = request.GET['suggestion']
+
+    cat_list = get_category_list(8, starts_with)
+
+    empty = (starts_with == '')
+    
+    return render(request, 'rango/category_list_search.html', {'cat_list':cat_list, 'empty':empty})
+
+
+@login_required
+def auto_add_page(request):
+    context = RequestContext(request)
+    context_dict = {}
+    cat_id = None
+    url = None
+    title = None
+    
+    if request.method == "GET":
+        title = request.GET['title']
+        url = request.GET['url']
+        cat_id = request.GET['category_id']
+        print(title, url, cat_id)
+        print("HEYYY")
+        if cat_id:
+            print("CHECK")
+            category = Category.objects.get(id=int(cat_id))
+            p = Page(title=title, url=url, category=category)
+            p.save()
+            pages = Page.objects.filter(category = category).order_by('-views')
+            context_dict['pages'] = pages
+            print("DUDE")
+    else:
+        pass
+
+    return render(request, 'rango/page_list.html', context_dict, context)
+
+        
+            

@@ -1,0 +1,10 @@
+{% if cat_list %}
+<h5>Matching Categories</h5>
+<ul>
+  {% for category in cat_list %}
+  <li class="list-group-item"><a href="{% url 'category'  category.slug  %}">{{ category.name }} </a></li>
+  {% endfor %}
+</ul>
+{% elif not empty %}
+<em> No search results </em>
+{% endif %}

@@ -1,0 +1,6 @@
+<h3>Matching Categories</h3>
+<ul>
+  {% for category in cat_list %}
+  <li class="list-group-item"><a href="{% url 'category'  category.slug  %}">{{ category.name }}</a></li>
+  {% endfor %}
+</ul>

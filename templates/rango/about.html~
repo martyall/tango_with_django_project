@@ -1,13 +1,16 @@
-<!DOCTYPE html>
+{% extends 'rango/base.html' %}
+
 {% load staticfiles %}
 
-<html>
-  <head>
-    <title>About</title>
-  </head>
-  <body>
-    <h1>Rango says here is the about page</h1>
-    <img src="{% static "images/smoking.jpg" %}"/>
-    <a href="javascript:history.back()">back to home page</a>
-  </body>
-</html>
+{% block title %}About{% endblock %}
+
+{% block body_block %}
+    <div class="page-header">
+                <h1>About</h1>
+            </div>
+            <div>
+            <p>This is Rango's about page!</strong>.</p>
+
+            <img  width="450" height="500" src="{% static "images/smoking.jpg" %}" alt="Picture of Rango" /> <!-- New line -->
+            </div>
+{% endblock %}

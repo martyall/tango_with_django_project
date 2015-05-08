@@ -1,11 +1,12 @@
 from datetime import datetime
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
 
 from rango.models import Category, Page
 
 from rango.forms import CategoryForm, PageForm, UserForm, UserProfileForm
 
+from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -314,24 +315,34 @@ def suggest_category(request):
     
     return render(request, 'rango/category_list_search.html', {'cat_list':cat_list, 'empty':empty})
 
-def auto_add_page(request):
 
+@login_required
+def auto_add_page(request):
+    context = RequestContext(request)
     context_dict = {}
+    cat_id = None
+    url = None
+    title = None
     
     if request.method == "GET":
         title = request.GET['title']
         url = request.GET['url']
-        cat_id = request.GET['cat_id']
+        cat_id = request.GET['category_id']
+        print(title, url, cat_id)
+        print("HEYYY")
         if cat_id:
+            print("CHECK")
             category = Category.objects.get(id=int(cat_id))
-            page = Page(title=title, url=url, category=category)
-
-            pages = Page.objects.filter(category = category)
+            p = Page(title=title, url=url, category=category)
+            p.save()
+            
+            pages = Page.objects.filter(category = category).order_by('-views')
             context_dict['pages'] = pages
+            print("DUDE")
     else:
         pass
 
-    return render(request, 'rango/page_list.html', context_dict)
+    return render(request, 'rango/page_list.html', context_dict, context)
 
         
             

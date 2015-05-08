@@ -1,5 +1,12 @@
+{% load static %}
 {% load rango_extras %}
 {% load googlesearch_inclusion_tags %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+<script src="{% static "js/rango-jquery.js" %}"></script>
+<script src="{% static "js/rango-ajax.js" %}"></script>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +29,7 @@
     <![endif]-->
   </head>
 
+  <!-- this is the top navigation bar -->
   <body>
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
@@ -36,38 +44,51 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-                <li><a href="{% url 'index' %}">Home</a></li>
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url 'restricted' %}">Restricted Page</a></li>
-                        <li><a href="{% url 'auth_logout' %}?next=/rango/">Logout</a></li>
-                        <li><a href="{% url 'add_category' %}">Add a New Category</a></li>
-                    {% else %}
-                        <li><a href="{% url 'registration_register' %}">Register Here</a></li>
-                        <li><a href="{% url 'auth_login' %}">Login</a></li>
-                    {% endif %}
-                <li><a href="{% url 'about' %}">About</a></li>			
+            <li><a href="{% url 'index' %}">Home</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'restricted' %}">Restricted Page</a></li>
+            <li><a href="{% url 'auth_logout' %}?next=/rango/">Logout</a></li>
+            <li><a href="{% url 'add_category' %}">Add a New Category</a></li>
+            {% else %}
+            <li><a href="{% url 'registration_register' %}">Register Here</a></li>
+            <li><a href="{% url 'auth_login' %}">Login</a></li>
+            {% endif %}
+            <li><a href="{% url 'about' %}">About</a></li>			
 	  </ul>
         </div>
       </div>
+    </div>	      
+</div>
+
+<div class="row">
+  <div class="col-sm-3 col-md-2 sidebar">
+    <ul class="nav nav-list">
+        <li class="nav-header">Find a Category</li>
+        <form>
+        <label></label>
+        <li><input  class="search-query span10" type="text" name="suggestion" value="" id="suggestion" /></li>
+        </form>
+    </ul>
+
+
+    <div id="cats">
+      {% if cat_list %}
+      {% include 'rango/category_list_search.html' with cat_list=cat_list %}
+      {% endif %}
     </div>
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-                {% block side_block %}
-                  {% get_category_list category %}
-		{% endblock %}
-
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-           <div>
-                {% block body_block %}{% endblock %}
-                </div>
-        </div>
-      </div>
+    <div id="display_cats">
+      {% include 'rango/category_list.html' with cat_list=categories %}
     </div>
+  </div>
 
-    <!-- Bootstrap core JavaScript
+  <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div>
+      {% block body_block %}{% endblock %}
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>

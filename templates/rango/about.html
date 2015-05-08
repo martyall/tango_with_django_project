@@ -6,11 +6,14 @@
 
 {% block body_block %}
     <div class="page-header">
-                <h1>About</h1>
-            </div>
-            <div>
-            <p>This is Rango's about page!</strong>.</p>
-
-            <img  width="450" height="500" src="{% static "images/smoking.jpg" %}" alt="Picture of Rango" /> <!-- New line -->
-            </div>
+      <h1>About</h1>
+    </div>
+    <div>
+      <p>This is Rango's about page!</strong>.</p>
+      <button onClick="alert('You clicked the button using Javascript.');">
+	Click on Me - I run Javascript
+      </button>
+      <button id="about-btn">Click on Me -- I'm javascript on speed</button>
+      <img  width="450" height="500" src="{% static "images/smoking.jpg" %}" alt="Picture of Rango" /> <!-- New line -->
+    </div>
 {% endblock %}

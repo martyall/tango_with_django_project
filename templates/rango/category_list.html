@@ -1,0 +1,10 @@
+<h3>Top Catgories</h3>
+{% if cat_list %}
+<ul>
+  {% for category in cat_list %}
+  <li class="list-group-item"><a href="{% url 'category'  category.slug  %}">{{ category.name }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<em>No categories at present</em>
+{% endif %}
